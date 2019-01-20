@@ -167,6 +167,15 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isYear)
 
     @classmethod
+    def isYearToken(cls, taggedToken):
+        """
+        Check if taggedToken has year token type in its tokenTypeSet.
+        Args:
+            taggedToken (TaggedToken): Tagged token.
+        """
+        return cls.hasYear(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isYearYear(cls, tokenType):
         return tokenType == TokenType.YEAR_YEAR
 
@@ -179,6 +188,10 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isSeason)
 
     @classmethod
+    def isSeasonToken(cls, taggedToken):
+        return cls.hasSeason(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isMonth(cls, tokenType):
         return tokenType == TokenType.MONTH or tokenType == TokenType.MONTH_ABBR \
                or tokenType == TokenType.MONTH_MONTH or tokenType == TokenType.YEAR_MONTH
@@ -186,6 +199,10 @@ class TokenTypeUtil(object):
     @classmethod
     def hasMonth(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isMonth)
+
+    @classmethod
+    def isMonthToken(cls, taggedToken):
+        return cls.hasMonth(taggedToken.tokenTypeSet)
 
     @classmethod
     def isMonthMonth(cls, tokenType):
@@ -196,12 +213,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isMonthMonth)
 
     @classmethod
+    def isMonthMonthToken(cls, taggedToken):
+        return cls.hasMonthMonth(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isYearMonth(cls, tokenType):
         return tokenType == TokenType.YEAR_MONTH
 
     @classmethod
     def hasYearMonth(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isYearMonth)
+
+    @classmethod
+    def isYearMonthToken(cls, taggedToken):
+        return cls.hasYearMonth(taggedToken.tokenTypeSet)
 
     @classmethod
     def isWeek(cls, tokenType):
@@ -212,12 +237,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isWeek)
 
     @classmethod
+    def isWeekToken(cls, taggedToken):
+        return cls.hasWeek(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isWeekWeek(cls, tokenType):
         return tokenType == TokenType.WEEK_WEEK
 
     @classmethod
     def hasWeekWeek(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isWeekWeek)
+
+    @classmethod
+    def isWeekWeekToken(cls, taggedToken):
+        return cls.hasWeekWeek(taggedToken.tokenTypeSet)
 
     @classmethod
     def isDate(cls, tokenType):
@@ -228,6 +261,10 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isDate)
 
     @classmethod
+    def isDateToken(cls, taggedToken):
+        return cls.hasDate(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isTime(cls, tokenType):
         return tokenType == TokenType.TIME or tokenType == TokenType.TIME_TIME
 
@@ -236,7 +273,7 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isTime)
 
     @classmethod
-    def hasTimeForToken(cls, taggedToken):
+    def isTimeToken(cls, taggedToken):
         return cls.hasTime(taggedToken.tokenTypeSet)
 
     @classmethod
@@ -248,12 +285,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isTimeTime)
 
     @classmethod
+    def isTimeTimeToken(cls, taggedToken):
+        return cls.hasTimeTime(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isHalfDay(cls, tokenType):
         return tokenType == TokenType.HALFDAY or tokenType == TokenType.HALFDAY_HALFDAY
 
     @classmethod
     def hasHalfDay(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isHalfDay)
+
+    @classmethod
+    def isHalfDayToken(cls, taggedToken):
+        return cls.hasHalfDay(taggedToken.tokenTypeSet)
 
     @classmethod
     def isTimeZone(cls, tokenType):
@@ -264,12 +309,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isTimeZone)
 
     @classmethod
+    def isTimeZoneToken(cls, taggedToken):
+        return cls.hasTimeZone(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isEra(cls, tokenType):
         return tokenType == TokenType.ERA
 
     @classmethod
     def hasEra(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isEra)
+
+    @classmethod
+    def isEraToken(cls, taggedToken):
+        return cls.hasEra(taggedToken.tokenTypeSet)
 
     @classmethod
     def isTimeUnit(cls, tokenType):
@@ -280,12 +333,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isTimeUnit)
 
     @classmethod
+    def isTimeUnitToken(cls, taggedToken):
+        return cls.hasTimeUnit(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isDuration(cls, tokenType):
         return tokenType == TokenType.DURATION
 
     @classmethod
     def hasDuration(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isDuration)
+
+    @classmethod
+    def isDurationToken(cls, taggedToken):
+        return cls.hasDuration(taggedToken.tokenTypeSet)
 
     @classmethod
     def isDurationDuration(cls, tokenType):
@@ -296,12 +357,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isDurationDuration)
 
     @classmethod
+    def isDurationDurationToken(cls, taggedToken):
+        return cls.hasDurationDuration(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isDayTime(cls, tokenType):
         return tokenType == TokenType.DAY_TIME
 
     @classmethod
     def hasDayTime(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isDayTime)
+
+    @classmethod
+    def isDayTimeToken(cls, taggedToken):
+        return cls.hasDayTime(taggedToken.tokenTypeSet)
 
     @classmethod
     def isTimeLine(cls, tokenType):
@@ -312,12 +381,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isTimeLine)
 
     @classmethod
+    def isTimeLineToken(cls, taggedToken):
+        return cls.hasTimeLine(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isHoliday(cls, tokenType):
         return tokenType == TokenType.HOLIDAY
 
     @classmethod
     def hasHoliday(cls, tokenType):
         return cls.hasType(tokenType, cls.isHoliday)
+
+    @classmethod
+    def isHolidayToken(cls, taggedToken):
+        return cls.hasHoliday(taggedToken.tokenTypeSet)
 
     @classmethod
     def isPeriod(cls, tokenType):
@@ -328,12 +405,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenType, cls.isPeriod)
 
     @classmethod
+    def isPeriodToken(cls, taggedToken):
+        return cls.hasPeriod(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isDecade(cls, tokenType):
         return tokenType == TokenType.DECADE
 
     @classmethod
     def hasDecade(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isDecade)
+
+    @classmethod
+    def isDecadeToken(cls, taggedToken):
+        return cls.hasDecade(taggedToken.tokenTypeSet)
 
     @classmethod
     def isNumeral(cls, tokenType):
@@ -344,12 +429,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isNumeral)
 
     @classmethod
+    def isNumeralToken(cls, taggedToken):
+        return cls.hasNumeral(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isNumeralNumeral(cls, tokenType):
         return tokenType == TokenType.NUMERAL_NUMERAL
 
     @classmethod
     def hasNumeralNumeral(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isNumeralNumeral)
+
+    @classmethod
+    def isNumeralNumeralToken(cls, taggedToken):
+        return cls.hasNumeralNumeral(taggedToken.tokenTypeSet)
 
     @classmethod
     def isInArticle(cls, tokenType):
@@ -360,12 +453,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isInArticle)
 
     @classmethod
+    def isInArticleToken(cls, taggedToken):
+        return cls.hasInArticle(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isPrefix(cls, tokenType):
         return tokenType == TokenType.PREFIX
 
     @classmethod
     def hasPrefix(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isPrefix)
+
+    @classmethod
+    def isPrefixToken(cls, taggedToken):
+        return cls.hasPrefix(taggedToken.tokenTypeSet)
 
     @classmethod
     def isSuffix(cls, tokenType):
@@ -376,12 +477,20 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isSuffix)
 
     @classmethod
+    def isSuffixToken(cls, taggedToken):
+        return cls.hasSuffix(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isLinkage(cls, tokenType):
         return tokenType == TokenType.LINKAGE
 
     @classmethod
     def hasLinkage(cls, tokenTypeSet):
         return cls.hasType(tokenTypeSet, cls.isLinkage)
+
+    @classmethod
+    def isLinkageToken(cls, taggedToken):
+        return cls.hasLinkage(taggedToken.tokenTypeSet)
 
     @classmethod
     def isComma(cls, tokenType):
@@ -392,7 +501,11 @@ class TokenTypeUtil(object):
         return cls.hasType(tokenTypeSet, cls.isComma)
 
     @classmethod
-    def isTimeToken(cls, tokenType):
+    def isCommaToken(cls, taggedToken):
+        return cls.hasComma(taggedToken.tokenTypeSet)
+
+    @classmethod
+    def isGeneralTime(cls, tokenType):
         return cls.isYear(tokenType) or cls.isSeason(tokenType) or cls.isMonth(tokenType) or cls.isWeek(
             tokenType) or cls.isDate(
             tokenType) or cls.isTime(tokenType) or cls.isHalfDay(tokenType) \
@@ -401,5 +514,9 @@ class TokenTypeUtil(object):
                or cls.isHoliday(tokenType) or cls.isPeriod(tokenType) or cls.isDecade(tokenType)
 
     @classmethod
-    def hasTimeToken(cls, tokenTypeSet):
-        return cls.hasType(tokenTypeSet, cls.isTimeToken)
+    def hasGeneralTime(cls, tokenTypeSet):
+        return cls.hasType(tokenTypeSet, cls.isGeneralTime)
+
+    @classmethod
+    def isGeneralTimeToken(cls, taggedToken):
+        return cls.hasGeneralTime(taggedToken.tokenTypeSet)

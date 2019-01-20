@@ -6,7 +6,7 @@ from model.TokenType import TokenType
 
 class TokenTypeUtilTest(unittest.TestCase):
 
-    def testRegex(self):
+    def testGetTokenTypeSet(self):
         nlpUtil = NlpUtil()
         regexUtil = RegexUtil()
         tokenTypeUtil = TokenTypeUtil(regexUtil)

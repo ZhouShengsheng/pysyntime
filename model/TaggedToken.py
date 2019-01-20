@@ -6,7 +6,13 @@ class TaggedToken(BasicTaggedToken):
     Tagged token with token types.
 
     Attributes:
-        tokenTypes (set): Token types for this token.
+        tokenTypeSet (set): Token types for this token.
     """
 
-    tokenTypes = None
+    def __init__(self, tokenTypeSet=None):
+        super().__init__()
+        self.tokenTypeSet = tokenTypeSet
+
+    def clearTokenType(self):
+        if not self.tokenTypeSet:
+            self.tokenTypeSet.clear()
