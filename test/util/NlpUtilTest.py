@@ -14,9 +14,9 @@ class NlpUtilTest(unittest.TestCase):
             print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
                   token.shape_, token.is_alpha, token.is_stop)
         token = doc[0]
-        self.assertEqual(token.text, 'Apple')
-        self.assertEqual(token.lemma_, 'apple')
-        self.assertEqual(token.tag_, 'NNP')
+        self.assertEqual(token.text, 'The')
+        self.assertEqual(token.lemma_, 'the')
+        self.assertEqual(token.tag_, 'DT')
 
     def testTagging(self):
         taggedTokenList = self.nlpUtil.tagging(self.text)

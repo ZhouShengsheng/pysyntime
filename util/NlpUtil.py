@@ -2,6 +2,9 @@ import spacy
 from model.TaggedToken import TaggedToken
 
 class NlpUtil(object):
+    """
+    NLP util to do POS-tagging for the input text. NLP is powered by spaCy.
+    """
 
     def __init__(self):
         self.nlp = spacy.load('en')
