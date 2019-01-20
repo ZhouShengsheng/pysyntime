@@ -1,4 +1,15 @@
 class BasicTaggedToken(object):
+    """
+    Basic tagged token for a token.
+
+    Attributes:
+        token (str): Raw token.
+        lemma (str): Lemma.
+        tag (str): POS-tag.
+        tokenPosition (int): Index of the token in the text beginning from 0.
+        beginCharPosition (int): Starting character position in the text.
+        endCharPosition (int): Ending character position in the text.
+    """
 
     def __init__(self):
         self.token = ""
