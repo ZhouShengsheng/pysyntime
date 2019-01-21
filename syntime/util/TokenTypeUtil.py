@@ -180,6 +180,14 @@ class TokenTypeUtil(object):
         return tokenType == TokenType.YEAR_YEAR
 
     @classmethod
+    def hasYearYear(cls, tokenTypeSet):
+        return cls.hasType(tokenTypeSet, cls.isYearYear)
+
+    @classmethod
+    def isYearYearToken(cls, taggedToken):
+        return cls.hasYearYear(taggedToken.tokenTypeSet)
+
+    @classmethod
     def isSeason(cls, tokenType):
         return tokenType == TokenType.SEASON
 
@@ -299,6 +307,18 @@ class TokenTypeUtil(object):
     @classmethod
     def isHalfDayToken(cls, taggedToken):
         return cls.hasHalfDay(taggedToken.tokenTypeSet)
+
+    @classmethod
+    def isHalfDayHalfDay(cls, tokenType):
+        return tokenType == TokenType.HALFDAY_HALFDAY
+
+    @classmethod
+    def hasHalfDayHalfDay(cls, tokenTypeSet):
+        return cls.hasType(tokenTypeSet, cls.isHalfDayHalfDay)
+
+    @classmethod
+    def isHalfDayHalfDayToken(cls, taggedToken):
+        return cls.hasHalfDayHalfDay(taggedToken.tokenTypeSet)
 
     @classmethod
     def isTimeZone(cls, tokenType):
@@ -520,3 +540,15 @@ class TokenTypeUtil(object):
     @classmethod
     def isGeneralTimeToken(cls, taggedToken):
         return cls.hasGeneralTime(taggedToken.tokenTypeSet)
+
+    @classmethod
+    def isSameTokenType(cls, taggedToken1, taggedToken2):
+        tokenTypeSet1 = taggedToken1.tokenTypeSet
+        tokenTypeSet2 = taggedToken2.tokenTypeSet
+        if not tokenTypeSet1 or not tokenTypeSet2 or len(tokenTypeSet1) != len(tokenTypeSet2):
+            return False
+        for tokenType1 in tokenTypeSet1:
+            for tokenType2 in tokenTypeSet2:
+                if tokenType1 == tokenType2:
+                    return True
+        return False

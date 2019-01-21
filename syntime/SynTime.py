@@ -23,14 +23,15 @@ class SynTime(object):
             date (str)
         """
         if not text:
-            return None
+            return text
         taggedTokenList = self.nlpUtil.tagging(text)
         timeTokenList = self.identifyTimeToken(taggedTokenList)
         if not timeTokenList or len(timeTokenList) == 0:
-            return None
+            return text
         timeSegmentList = self.identifyTimeSegment(taggedTokenList, timeTokenList)
         if not timeSegmentList or len(timeSegmentList) == 0:
-            return None
+            return text
+        return self.generateTimeMLText(text, taggedTokenList, timeSegmentList, date)
 
     def identifyTimeToken(self, taggedTokenList):
         """
@@ -122,8 +123,8 @@ class SynTime(object):
                     beginToken = j
                     break
                 elif TokenTypeUtil.isLinkageToken(taggedPreMod):
-                    if j-1 >= leftBound and TokenTypeUtil.isGeneralTimeToken(taggedTimeToken) \
-                            and TokenTypeUtil.isNumeralToken(taggedTokenList[j-1]):
+                    if j - 1 >= leftBound and TokenTypeUtil.isGeneralTimeToken(taggedTimeToken) \
+                            and TokenTypeUtil.isNumeralToken(taggedTokenList[j - 1]):
                         findLeftDependentSegment = True
                         leftTimeTokenPosition = j - 1
                         leftBeginToken = leftTimeTokenPosition
@@ -159,7 +160,7 @@ class SynTime(object):
                     break
                 elif TokenTypeUtil.isLinkageToken(taggedSufMod):
                     if j + 1 <= rightBound and TokenTypeUtil.isGeneralTimeToken(taggedTimeToken) \
-                            and TokenTypeUtil.isNumeralToken(taggedTokenList[j+1]):
+                            and TokenTypeUtil.isNumeralToken(taggedTokenList[j + 1]):
                         findRightDependentSegment = True
                         rightTimeTokenPosition = j + 1
                         rightBeginToken = rightTimeTokenPosition
@@ -192,9 +193,165 @@ class SynTime(object):
         Generate TimeML text for input text.
 
         Args:
+            text (str): Raw text.
             taggedTokenList (list): Tagged token list.
             timeSegmentList (list): Time segment list.
+            date (str): User-specified date.
 
         Returns:
             timeMLText (str): Text in TimeML format.
         """
+        timeMLText = ''
+        type = 'DATE'
+        value = date
+        tid = 1
+        lastCharPosition = 0
+        taggedTokenListLen = len(taggedTokenList)
+        timeSegmentListLen = len(timeSegmentList)
+
+        if timeSegmentList and timeSegmentListLen > 0:
+            isTimex = True
+            timexBeginTokenPosition = timeSegmentList[0].beginTokenPosition
+            timexEndTokenPosition = timeSegmentList[0].endTokenPosition
+
+            for i in range(timeSegmentListLen):
+                timeSegment = timeSegmentList[i]
+                segmentBeginTokenPosition = timeSegment.beginTokenPosition
+                segmentEndTokenPosition = timeSegment.endTokenPosition
+                if timexEndTokenPosition + 1 == segmentBeginTokenPosition \
+                        or timexEndTokenPosition > segmentBeginTokenPosition:
+                    isTimex = False
+                elif timexEndTokenPosition == segmentBeginTokenPosition:
+                    if TokenTypeUtil.isCommaToken(taggedTokenList[segmentBeginTokenPosition]):
+                        if segmentBeginTokenPosition == 0 or segmentBeginTokenPosition + 1 == taggedTokenListLen:
+                            isTimex = True
+                        else:
+                            commaPreToken = taggedTokenList[segmentBeginTokenPosition - 1]
+                            commaSufToken = taggedTokenList[segmentBeginTokenPosition + 1]
+                            if (TokenTypeUtil.isGeneralTimeToken(commaPreToken) or TokenTypeUtil.isNumeralToken(
+                                    commaPreToken)) and TokenTypeUtil.isGeneralTimeToken(commaSufToken) \
+                                    and not TokenTypeUtil.isSameTokenType(commaPreToken, commaSufToken):
+                                isTimex = False
+                            else:
+                                isTimex = True
+                    elif TokenTypeUtil.isLinkageToken(taggedTokenList[segmentBeginTokenPosition]):
+                        isTimex = True
+                    else:
+                        isTimex = False
+                else:
+                    isTimex = True
+
+                if not isTimex:
+                    timexEndTokenPosition = segmentEndTokenPosition
+                else:
+                    timexBeginTaggedToken = taggedTokenList[timexBeginTokenPosition]
+                    timexEndTaggedToken = taggedTokenList[timexEndTokenPosition]
+                    if TokenTypeUtil.isCommaToken(timexBeginTaggedToken) or TokenTypeUtil.isLinkageToken(
+                            timexBeginTaggedToken) or timexBeginTaggedToken.tag == 'IN':
+                        timexBeginTokenPosition += 1
+                    if TokenTypeUtil.isComma(timexEndTaggedToken) or TokenTypeUtil.isLinkageToken(timexEndTaggedToken):
+                        timexEndTokenPosition -= 1
+
+                    timexEndToken = timexEndTaggedToken.token
+                    beginCharPosition = timexBeginTaggedToken.beginCharPosition
+                    endCharPosition = timexEndTaggedToken.endCharPosition
+
+                    timeMLText += text[lastCharPosition:beginCharPosition]
+                    lastCharPosition = beginCharPosition
+
+                    index = timexBeginTokenPosition
+                    while index <= timexEndTokenPosition:
+                        temTaggedToken = taggedTokenList[index]
+                        if TokenTypeUtil.isYearYearToken(temTaggedToken) or TokenTypeUtil.isYearMonthToken(
+                                temTaggedToken) \
+                                or TokenTypeUtil.isMonthMonthToken(temTaggedToken) or TokenTypeUtil.isWeekWeekToken(
+                            temTaggedToken) \
+                                or TokenTypeUtil.isTimeTimeToken(temTaggedToken) or TokenTypeUtil.isHalfDayHalfDayToken(
+                            temTaggedToken) \
+                                or TokenTypeUtil.isNumeralNumeralToken(temTaggedToken):
+                            temBeginCharPosition = temTaggedToken.beginCharPosition
+                            items = temTaggedToken.token.split('-')
+                            timex = text[lastCharPosition:temBeginCharPosition + len(items[0])]
+                            timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex) + '-'
+                            lastCharPosition = temBeginCharPosition + len(items[0]) + 1
+                            tid += 1
+                        index += 1
+
+                    if timexEndToken.endswith('\'s'):
+                        timex = text[lastCharPosition:endCharPosition - 2]
+                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        lastCharPosition = endCharPosition - 2
+                    elif timexEndToken.endswith('s') \
+                            and (timexEndTokenPosition + 1 < taggedTokenListLen and
+                                 taggedTokenList[timexEndTokenPosition + 1].token == "'"):
+                        timex = text[lastCharPosition:taggedTokenList[timexEndTokenPosition + 1].endCharPosition]
+                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        lastCharPosition = taggedTokenList[timexEndTokenPosition + 1].endCharPosition
+                    else:
+                        timex = text[lastCharPosition:endCharPosition]
+                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        lastCharPosition = endCharPosition
+                    tid += 1
+                    timexBeginTokenPosition = segmentBeginTokenPosition
+                    timexEndTokenPosition = segmentEndTokenPosition
+
+            timexBeginTaggedToken = taggedTokenList[timexBeginTokenPosition]
+            timexEndTaggedToken = taggedTokenList[timexEndTokenPosition]
+            if TokenTypeUtil.isCommaToken(timexBeginTaggedToken) or TokenTypeUtil.isLinkageToken(
+                    timexBeginTaggedToken) or timexBeginTaggedToken.tag == 'IN':
+                timexBeginTokenPosition += 1
+            if TokenTypeUtil.isComma(timexEndTaggedToken) or TokenTypeUtil.isLinkageToken(timexEndTaggedToken):
+                timexEndTokenPosition -= 1
+
+            timexEndToken = timexEndTaggedToken.token
+            beginCharPosition = timexBeginTaggedToken.beginCharPosition
+            endCharPosition = timexEndTaggedToken.endCharPosition
+
+            timeMLText += text[lastCharPosition:beginCharPosition]
+            lastCharPosition = beginCharPosition
+
+            index = timexBeginTokenPosition
+            while index <= timexEndTokenPosition:
+                temTaggedToken = taggedTokenList[index]
+                if TokenTypeUtil.isYearYearToken(temTaggedToken) or TokenTypeUtil.isYearMonthToken(
+                        temTaggedToken) \
+                        or TokenTypeUtil.isMonthMonthToken(temTaggedToken) or TokenTypeUtil.isWeekWeekToken(
+                    temTaggedToken) \
+                        or TokenTypeUtil.isTimeTimeToken(temTaggedToken) or TokenTypeUtil.isHalfDayHalfDayToken(
+                    temTaggedToken) \
+                        or TokenTypeUtil.isNumeralNumeralToken(temTaggedToken):
+                    temBeginCharPosition = temTaggedToken.beginCharPosition
+                    items = temTaggedToken.token.split('-')
+                    timex = text[lastCharPosition:temBeginCharPosition + len(items[0])]
+                    timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex) + '-'
+                    lastCharPosition = temBeginCharPosition + len(items[0]) + 1
+                    tid += 1
+                index += 1
+
+            if timexEndToken.endswith('\'s'):
+                timex = text[lastCharPosition:endCharPosition - 2]
+                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                lastCharPosition = endCharPosition - 2
+            elif timexEndToken.endswith('s') \
+                    and (timexEndTokenPosition + 1 < taggedTokenListLen and
+                         taggedTokenList[timexEndTokenPosition + 1].token == "'"):
+                timex = text[lastCharPosition:taggedTokenList[timexEndTokenPosition + 1].endCharPosition]
+                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                lastCharPosition = taggedTokenList[timexEndTokenPosition + 1].endCharPosition
+            else:
+                timex = text[lastCharPosition:endCharPosition]
+                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                lastCharPosition = endCharPosition
+            tid += 1
+
+        timeMLText += text[lastCharPosition:]
+        return timeMLText
+
+    @classmethod
+    def getTIMEX3Str(cls, tid, timexType, value, timex):
+        TIMEX3_TID = "<TIMEX3 tid=\"t"
+        TIMEX3_TYPE = "\" type=\""
+        TIMEX3_VALUE = "\" value=\""
+        TIMEX3_MID = "\">"
+        TIMEX3_END = "</TIMEX3>"
+        return TIMEX3_TID + str(tid) + TIMEX3_TYPE + timexType + TIMEX3_VALUE + value + TIMEX3_MID + timex + TIMEX3_END
