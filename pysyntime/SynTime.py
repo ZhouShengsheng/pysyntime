@@ -26,10 +26,10 @@ class SynTime(object):
             return text
         taggedTokenList = self.__nlpUtil.tagging(text)
         timeTokenList = self.__identifyTimeToken(taggedTokenList)
-        if not timeTokenList or len(timeTokenList) == 0:
+        if not timeTokenList:
             return text
         timeSegmentList = self.__identifyTimeSegment(taggedTokenList, timeTokenList)
-        if not timeSegmentList or len(timeSegmentList) == 0:
+        if not timeSegmentList:
             return text
         return self.__generateTimeMLText(text, taggedTokenList, timeSegmentList, date)
 
