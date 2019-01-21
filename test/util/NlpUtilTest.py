@@ -1,5 +1,5 @@
 import unittest
-from pysyntime.util.NlpUtil import NlpUtil
+from pysyntime.util import NlpUtil
 
 
 class NlpUtilTest(unittest.TestCase):

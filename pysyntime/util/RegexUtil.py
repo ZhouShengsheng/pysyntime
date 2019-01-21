@@ -183,10 +183,10 @@ class RegexUtil(object):
     HOLIDAY_PATTERN = None
 
     def __init__(self, synTimeRegexFile=SYN_TIME_REGEX_FILE):
-        self.loadSynTimeRegex(synTimeRegexFile)
-        self.inducePattern()
+        self.__loadSynTimeRegex(synTimeRegexFile)
+        self.__inducePattern()
 
-    def loadSynTimeRegex(self, synTimeRegexFile):
+    def __loadSynTimeRegex(self, synTimeRegexFile):
         with open(synTimeRegexFile) as f:
             lines = f.readlines()
         assert lines is not None, 'Failed to load SynTime regex'
@@ -263,7 +263,7 @@ class RegexUtil(object):
             elif regexName == 'HOLIDAY_REGEX':
                 self.HOLIDAY_REGEX = regex
 
-    def inducePattern(self):
+    def __inducePattern(self):
         # POS: CD; Type: DATE
         self.YEAR_PATTERN_1 = re.compile(self.YEAR_REGEX_1, re.IGNORECASE)
         self.YEAR_PATTERN_2 = re.compile(self.YEAR_REGEX_2, re.IGNORECASE)

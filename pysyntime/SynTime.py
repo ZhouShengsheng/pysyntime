@@ -1,7 +1,7 @@
-from pysyntime.model.TimeSegment import TimeSegment
-from pysyntime.util.NlpUtil import NlpUtil
-from pysyntime.util.RegexUtil import RegexUtil
-from pysyntime.util.TokenTypeUtil import TokenTypeUtil
+from .model import TimeSegment
+from .util import NlpUtil
+from .util import RegexUtil
+from .util import TokenTypeUtil
 
 
 class SynTime(object):
@@ -10,9 +10,9 @@ class SynTime(object):
     """
 
     def __init__(self):
-        self.nlpUtil = NlpUtil()
-        self.regexUtil = RegexUtil()
-        self.tokenTypeUtil = TokenTypeUtil(self.regexUtil)
+        self.__nlpUtil = NlpUtil()
+        self.__regexUtil = RegexUtil()
+        self.__tokenTypeUtil = TokenTypeUtil(self.__regexUtil)
 
     def extractTimexFromText(self, text, date):
         """
@@ -24,16 +24,16 @@ class SynTime(object):
         """
         if not text:
             return text
-        taggedTokenList = self.nlpUtil.tagging(text)
-        timeTokenList = self.identifyTimeToken(taggedTokenList)
+        taggedTokenList = self.__nlpUtil.tagging(text)
+        timeTokenList = self.__identifyTimeToken(taggedTokenList)
         if not timeTokenList or len(timeTokenList) == 0:
             return text
-        timeSegmentList = self.identifyTimeSegment(taggedTokenList, timeTokenList)
+        timeSegmentList = self.__identifyTimeSegment(taggedTokenList, timeTokenList)
         if not timeSegmentList or len(timeSegmentList) == 0:
             return text
-        return self.generateTimeMLText(text, taggedTokenList, timeSegmentList, date)
+        return self.__generateTimeMLText(text, taggedTokenList, timeSegmentList, date)
 
-    def identifyTimeToken(self, taggedTokenList):
+    def __identifyTimeToken(self, taggedTokenList):
         """
         Get time token list from taggedTokenList.
 
@@ -49,7 +49,7 @@ class SynTime(object):
             token = taggedToken.token
             tag = taggedToken.tag
 
-            tokenTypeSet = self.tokenTypeUtil.getTokenTypeSet(token, tag)
+            tokenTypeSet = self.__tokenTypeUtil.getTokenTypeSet(token, tag)
             taggedToken.tokenTypeSet = tokenTypeSet
 
             if TokenTypeUtil.isHalfDayToken(taggedToken):
@@ -75,7 +75,7 @@ class SynTime(object):
 
         return timeTokenList
 
-    def identifyTimeSegment(self, taggedTokenList, timeTokenList):
+    def __identifyTimeSegment(self, taggedTokenList, timeTokenList):
         """
         Get time segment list from taggedTokenList and timeTokenList.
 
@@ -188,7 +188,7 @@ class SynTime(object):
 
         return timeSegmentList
 
-    def generateTimeMLText(self, text, taggedTokenList, timeSegmentList, date):
+    def __generateTimeMLText(self, text, taggedTokenList, timeSegmentList, date):
         """
         Generate TimeML text for input text.
 
@@ -272,24 +272,24 @@ class SynTime(object):
                             temBeginCharPosition = temTaggedToken.beginCharPosition
                             items = temTaggedToken.token.split('-')
                             timex = text[lastCharPosition:temBeginCharPosition + len(items[0])]
-                            timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex) + '-'
+                            timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex) + '-'
                             lastCharPosition = temBeginCharPosition + len(items[0]) + 1
                             tid += 1
                         index += 1
 
                     if timexEndToken.endswith('\'s'):
                         timex = text[lastCharPosition:endCharPosition - 2]
-                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                         lastCharPosition = endCharPosition - 2
                     elif timexEndToken.endswith('s') \
                             and (timexEndTokenPosition + 1 < taggedTokenListLen and
                                  taggedTokenList[timexEndTokenPosition + 1].token == "'"):
                         timex = text[lastCharPosition:taggedTokenList[timexEndTokenPosition + 1].endCharPosition]
-                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                         lastCharPosition = taggedTokenList[timexEndTokenPosition + 1].endCharPosition
                     else:
                         timex = text[lastCharPosition:endCharPosition]
-                        timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                        timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                         lastCharPosition = endCharPosition
                     tid += 1
                     timexBeginTokenPosition = segmentBeginTokenPosition
@@ -323,24 +323,24 @@ class SynTime(object):
                     temBeginCharPosition = temTaggedToken.beginCharPosition
                     items = temTaggedToken.token.split('-')
                     timex = text[lastCharPosition:temBeginCharPosition + len(items[0])]
-                    timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex) + '-'
+                    timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex) + '-'
                     lastCharPosition = temBeginCharPosition + len(items[0]) + 1
                     tid += 1
                 index += 1
 
             if timexEndToken.endswith('\'s'):
                 timex = text[lastCharPosition:endCharPosition - 2]
-                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                 lastCharPosition = endCharPosition - 2
             elif timexEndToken.endswith('s') \
                     and (timexEndTokenPosition + 1 < taggedTokenListLen and
                          taggedTokenList[timexEndTokenPosition + 1].token == "'"):
                 timex = text[lastCharPosition:taggedTokenList[timexEndTokenPosition + 1].endCharPosition]
-                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                 lastCharPosition = taggedTokenList[timexEndTokenPosition + 1].endCharPosition
             else:
                 timex = text[lastCharPosition:endCharPosition]
-                timeMLText += SynTime.getTIMEX3Str(tid, type, value, timex)
+                timeMLText += SynTime.__getTIMEX3Str(tid, type, value, timex)
                 lastCharPosition = endCharPosition
             tid += 1
 
@@ -348,7 +348,7 @@ class SynTime(object):
         return timeMLText
 
     @classmethod
-    def getTIMEX3Str(cls, tid, timexType, value, timex):
+    def __getTIMEX3Str(cls, tid, timexType, value, timex):
         TIMEX3_TID = "<TIMEX3 tid=\"t"
         TIMEX3_TYPE = "\" type=\""
         TIMEX3_VALUE = "\" value=\""

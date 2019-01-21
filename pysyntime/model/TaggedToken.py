@@ -1,4 +1,4 @@
-from pysyntime.model.BasicTaggedToken import BasicTaggedToken
+from ..model import BasicTaggedToken
 
 
 class TaggedToken(BasicTaggedToken):

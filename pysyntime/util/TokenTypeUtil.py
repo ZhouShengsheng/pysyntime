@@ -1,5 +1,5 @@
-from pysyntime.model.TokenType import TokenType
-from pysyntime.model.TaggedToken import TaggedToken
+from ..model import TokenType
+from ..model import TaggedToken
 
 
 class TokenTypeUtil(object):

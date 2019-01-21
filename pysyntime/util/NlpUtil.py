@@ -1,5 +1,5 @@
 import spacy
-from pysyntime.model.TaggedToken import TaggedToken
+from ..model import TaggedToken
 
 class NlpUtil(object):
     """
@@ -7,7 +7,7 @@ class NlpUtil(object):
     """
 
     def __init__(self):
-        self.nlp = spacy.load('en')
+        self.nlp = spacy.load('en_core_web_sm')
 
     def tagging(self, text):
         if not text:
