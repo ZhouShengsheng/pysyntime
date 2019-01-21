@@ -1,12 +1,12 @@
-from model.TimeSegment import TimeSegment
-from util.NlpUtil import NlpUtil
-from util.RegexUtil import RegexUtil
-from util.TokenTypeUtil import TokenTypeUtil
+from syntime.model.TimeSegment import TimeSegment
+from syntime.util.NlpUtil import NlpUtil
+from syntime.util.RegexUtil import RegexUtil
+from syntime.util.TokenTypeUtil import TokenTypeUtil
 
 
 class SynTime(object):
     """
-    SynTime.
+    SynTime APIs.
     """
 
     def __init__(self):
@@ -35,6 +35,9 @@ class SynTime(object):
     def identifyTimeToken(self, taggedTokenList):
         """
         Get time token list from taggedTokenList.
+
+        Args:
+            taggedTokenList (list): Tagged token list.
 
         Returns:
             timeTokenList (list): Time token index list.
@@ -74,6 +77,10 @@ class SynTime(object):
     def identifyTimeSegment(self, taggedTokenList, timeTokenList):
         """
         Get time segment list from taggedTokenList and timeTokenList.
+
+        Args:
+            taggedTokenList (list): Tagged token list.
+            timeTokenList (list): Time token position list.
 
         Returns:
             timeSegmentList (list): Time segment list.
@@ -180,3 +187,14 @@ class SynTime(object):
 
         return timeSegmentList
 
+    def generateTimeMLText(self, text, taggedTokenList, timeSegmentList, date):
+        """
+        Generate TimeML text for input text.
+
+        Args:
+            taggedTokenList (list): Tagged token list.
+            timeSegmentList (list): Time segment list.
+
+        Returns:
+            timeMLText (str): Text in TimeML format.
+        """

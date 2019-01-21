@@ -1,5 +1,5 @@
-from model.TokenType import TokenType
-from model.TaggedToken import TaggedToken
+from syntime.model.TokenType import TokenType
+from syntime.model.TaggedToken import TaggedToken
 
 
 class TokenTypeUtil(object):

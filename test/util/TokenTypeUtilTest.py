@@ -1,8 +1,8 @@
 import unittest
-from util.NlpUtil import NlpUtil
-from util.RegexUtil import RegexUtil
-from util.TokenTypeUtil import TokenTypeUtil
-from model.TokenType import TokenType
+from syntime.util.NlpUtil import NlpUtil
+from syntime.util.RegexUtil import RegexUtil
+from syntime.util.TokenTypeUtil import TokenTypeUtil
+from syntime.model.TokenType import TokenType
 
 class TokenTypeUtilTest(unittest.TestCase):
 

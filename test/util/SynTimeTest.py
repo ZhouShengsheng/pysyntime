@@ -1,5 +1,5 @@
 from unittest import TestCase
-from main.SynTime import SynTime
+from syntime.SynTime import SynTime
 
 class SynTimeTest(TestCase):
 

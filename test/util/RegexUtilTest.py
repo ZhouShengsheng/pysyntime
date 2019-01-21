@@ -1,5 +1,5 @@
 import unittest
-from util.RegexUtil import RegexUtil
+from syntime.util.RegexUtil import RegexUtil
 
 class RegexUtilTest(unittest.TestCase):
 

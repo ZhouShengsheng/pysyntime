@@ -1,5 +1,5 @@
 import spacy
-from model.TaggedToken import TaggedToken
+from syntime.model.TaggedToken import TaggedToken
 
 class NlpUtil(object):
     """

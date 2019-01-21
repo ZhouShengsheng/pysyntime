@@ -1,4 +1,4 @@
-from model.BasicTaggedToken import BasicTaggedToken
+from syntime.model.BasicTaggedToken import BasicTaggedToken
 
 
 class TaggedToken(BasicTaggedToken):

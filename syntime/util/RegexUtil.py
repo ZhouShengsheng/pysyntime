@@ -1,6 +1,5 @@
 import os.path
 import re
-from model.TokenType import TokenType
 
 
 class RegexUtil(object):
@@ -8,7 +7,7 @@ class RegexUtil(object):
     Util to load and compile regex patterns for SynTime.
     """
 
-    SYN_TIME_REGEX_FILE = os.path.join(os.path.dirname(__file__), '../resource/syntimeregex/SynTimeRegex.txt')
+    SYN_TIME_REGEX_FILE = os.path.join(os.path.dirname(__file__), '../resource/SynTimeRegex.txt')
 
     # From StanfordCoreNLP edu.stanford.nlp.ie.regexp.NumberSequenceClassifier.java
     MID_REGEX = None
