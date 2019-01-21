@@ -18,16 +18,18 @@ The last 6 months surviving member of the team which first conquered Everest in 
 
 ## Installation
 
-You can install the package by easily running the `pip` command:
+You can install the package by easily running the `pip3` command:
 
 ```bash
-pip install pysyntime
+pip3 install pysyntime
 ```
+
+**Note**: `pysyntime` only suports Python 3+.
 
 Since `pysyntime` relies on [spaCy](https://spacy.io/) which is an NLP library, the required model needs to be downloaded:
 
 ```bash
-python -m spacy download en_core_web_sm
+python3 -m spacy download en_core_web_sm
 ```
 
 **Note**: The above command will download spaCy model and create symbol link, make sure you have root permission. 
